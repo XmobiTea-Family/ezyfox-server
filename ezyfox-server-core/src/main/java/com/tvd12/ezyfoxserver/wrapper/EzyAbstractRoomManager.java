@@ -26,12 +26,19 @@ public abstract class EzyAbstractRoomManager extends EzyLoggable implements EzyR
     private EzyRoom getOrCreateNewRoom(String roomId) {
         EzyRoom answer;
 
-        if (this.roomMap.containsKey(roomId)) {
-            answer = this.roomMap.get(roomId);
-        }
-        else {
-            answer = new EzySimpleRoom(roomId);
-            this.roomMap.put(roomId, answer);
+        Lock lock = this.getLock(roomId);
+        lock.lock();
+
+        try {
+            if (this.roomMap.containsKey(roomId)) {
+                answer = this.roomMap.get(roomId);
+            } else {
+                answer = new EzySimpleRoom(roomId);
+                this.roomMap.put(roomId, answer);
+            }
+        } finally {
+            lock.unlock();
+            this.removeLock(roomId);
         }
 
         return answer;
@@ -63,21 +70,23 @@ public abstract class EzyAbstractRoomManager extends EzyLoggable implements EzyR
     }
 
     @Override
-    public void join(EzyUser user, String roomId) {
+    public void joinRoom(EzyUser user, String roomId) {
         EzyRoom room = this.getOrCreateNewRoom(roomId);
         room.addUser(user);
 
         List<String> roomIdsInProperties = this.getRoomIdsInPropertiesOf(user);
-        if (!roomIdsInProperties.contains(roomId))
+        if (!roomIdsInProperties.contains(roomId)) {
             roomIdsInProperties.add(roomId);
+        }
     }
 
     @Override
-    public void leave(EzyUser user, String roomId) {
+    public void leaveRoom(EzyUser user, String roomId) {
         List<String> roomIdsInProperties = this.getRoomIdsInPropertiesOf(user);
 
-        if (!roomIdsInProperties.contains(roomId))
+        if (!roomIdsInProperties.contains(roomId)) {
             return;
+        }
 
         if (!this.roomMap.containsKey(roomId)) {
             return;
@@ -94,12 +103,12 @@ public abstract class EzyAbstractRoomManager extends EzyLoggable implements EzyR
     }
 
     @Override
-    public void leaveAll(EzyUser user) {
+    public void leaveAllRoom(EzyUser user) {
         List<String> roomIdsInProperties = this.getRoomIdsInPropertiesOf(user);
 
-        for (String roomId: roomIdsInProperties
+        for (String roomId : roomIdsInProperties
         ) {
-            this.leave(user, roomId);
+            this.leaveRoom(user, roomId);
         }
     }
 
@@ -127,12 +136,13 @@ public abstract class EzyAbstractRoomManager extends EzyLoggable implements EzyR
 
         List<String> roomIdsInProperties = this.getRoomIdsInPropertiesOf(user);
 
-        for (String roomId: roomIdsInProperties
+        for (String roomId : roomIdsInProperties
         ) {
             EzyRoom channel = this.getRoom(roomId);
 
-            if (channel != null)
+            if (channel != null) {
                 answer.add(channel);
+            }
         }
 
         return answer;

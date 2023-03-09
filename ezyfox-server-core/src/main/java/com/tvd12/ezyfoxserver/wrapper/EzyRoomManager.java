@@ -10,11 +10,11 @@ import java.util.concurrent.locks.Lock;
 public interface EzyRoomManager extends EzyDestroyable {
     List<EzyRoom> getAllRooms();
     
-    void join(EzyUser user, String roomId);
+    void joinRoom(EzyUser user, String roomId);
 
-    void leave(EzyUser user, String roomId);
+    void leaveRoom(EzyUser user, String roomId);
 
-    void leaveAll(EzyUser user);
+    void leaveAllRoom(EzyUser user);
 
     EzyRoom getRoom(String roomId);
 

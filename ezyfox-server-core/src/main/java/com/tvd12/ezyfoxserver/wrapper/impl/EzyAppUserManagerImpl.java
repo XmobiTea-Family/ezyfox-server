@@ -6,6 +6,7 @@ import com.tvd12.ezyfox.util.EzyDestroyable;
 import com.tvd12.ezyfoxserver.delegate.EzyAppUserDelegate;
 import com.tvd12.ezyfoxserver.entity.EzyUser;
 import com.tvd12.ezyfoxserver.wrapper.EzyAbstractUserManager;
+import com.tvd12.ezyfoxserver.wrapper.EzyAppRoomManager;
 import com.tvd12.ezyfoxserver.wrapper.EzyAppUserManager;
 import lombok.Getter;
 
@@ -17,10 +18,12 @@ public class EzyAppUserManagerImpl
     @Getter
     protected final String appName;
     protected final EzyAppUserDelegate userDelegate;
+    protected final EzyAppRoomManager roomManager;
 
     protected EzyAppUserManagerImpl(Builder builder) {
         super(builder);
         this.appName = builder.appName;
+        this.roomManager = builder.roomManager;
         this.userDelegate = builder.userDelegate;
     }
 
@@ -41,6 +44,7 @@ public class EzyAppUserManagerImpl
             if (contains) {
                 removeUser(user);
                 userDelegate.onUserRemoved(user, reason);
+                roomManager.leaveAllRoom(user);
             }
         } finally {
             lock.unlock();
@@ -64,9 +68,15 @@ public class EzyAppUserManagerImpl
 
         protected String appName;
         protected EzyAppUserDelegate userDelegate;
+        protected EzyAppRoomManager roomManager;
 
         public Builder appName(String appName) {
             this.appName = appName;
+            return this;
+        }
+
+        public Builder roomManager(EzyAppRoomManager roomManager) {
+            this.roomManager = roomManager;
             return this;
         }
 

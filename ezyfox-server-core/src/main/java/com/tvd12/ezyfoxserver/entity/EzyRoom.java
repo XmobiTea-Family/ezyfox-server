@@ -51,21 +51,25 @@ public interface EzyRoom extends EzyDestroyable {
     void removeUser(EzyUser user);
 
     /**
-     * check the room contains user
+     * check the room contains user.
      *
      * @param user the user need check
+     * @return is user in the room
      */
     boolean containsUser(EzyUser user);
 
     /**
-     * check the room contains user via username
+     * check the room contains user via username.
      *
      * @param username the username of user need check
+     * @return is username in the room
      */
     boolean containsUser(String username);
 
     /**
-     * how many user in this room
+     * how many user in this room.
+     *
+     * @return the user count
      */
     int size();
 

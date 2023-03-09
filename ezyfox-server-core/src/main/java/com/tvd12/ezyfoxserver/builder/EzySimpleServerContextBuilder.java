@@ -132,13 +132,13 @@ public class EzySimpleServerContextBuilder<B extends EzySimpleServerContextBuild
         EzyAppSetting setting
     ) {
         EzySimpleAppUserDelegate userDelegate = new EzySimpleAppUserDelegate();
-        EzyAppUserManager appUserManager = newAppUserManager(setting, userDelegate);
-        EzyAppRoomManager appChannelManager = newAppChannelManager();
+        EzyAppRoomManager appRoomManager = newAppRoomManager();
+        EzyAppUserManager appUserManager = newAppUserManager(setting, userDelegate, appRoomManager);
         EzyEventControllers eventControllers = newEventControllers();
         EzySimpleApplication app = new EzySimpleApplication();
         app.setSetting(setting);
         app.setUserManager(appUserManager);
-        app.setRoomManager(appChannelManager);
+        app.setRoomManager(appRoomManager);
         app.setEventControllers(eventControllers);
         ScheduledExecutorService appExecutorService = newAppExecutorService(setting);
         EzySimpleAppContext appContext = new EzySimpleAppContext();
@@ -152,16 +152,18 @@ public class EzySimpleServerContextBuilder<B extends EzySimpleServerContextBuild
 
     protected EzyAppUserManager newAppUserManager(
         EzyAppSetting setting,
-        EzyAppUserDelegate userDelegate
+        EzyAppUserDelegate userDelegate,
+        EzyAppRoomManager roomManager
     ) {
         return EzyAppUserManagerImpl.builder()
             .appName(setting.getName())
+            .roomManager(roomManager)
             .maxUsers(setting.getMaxUsers())
             .userDelegate(userDelegate)
             .build();
     }
 
-    protected EzyAppRoomManager newAppChannelManager() {
+    protected EzyAppRoomManager newAppRoomManager() {
         return EzyAppRoomManagerImpl.builder()
                 .build();
     }
