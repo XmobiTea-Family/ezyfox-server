@@ -98,6 +98,24 @@ public abstract class EzyAbstractResponse<T extends EzyResponse<T>>
     }
 
     @Override
+    public T channel(String channelId, boolean exclude) {
+        this.response.room(channelId, exclude);
+        return (T) this;
+    }
+
+    @Override
+    public T channels(String[] channelIds, boolean exclude) {
+        this.response.rooms(channelIds, exclude);
+        return (T) this;
+    }
+
+    @Override
+    public T channels(Iterable<String> channelIds, boolean exclude) {
+        this.response.rooms(channelIds, exclude);
+        return (T) this;
+    }
+
+    @Override
     public T transportType(EzyTransportType transportType) {
         this.response.transportType(transportType);
         return (T) this;

@@ -219,6 +219,63 @@ public interface EzyResponse<T extends EzyResponse<T>> extends EzyVoidCommand {
     default T usernames(Iterable<String> usernames) {
         return usernames(usernames, false);
     }
+    
+    /**
+     * Includes/excludes a channel to/from response receiver list by channel.
+     *
+     * @param channelId the channel id of the channel.
+     * @param exclude false is inclusive, true is exclusive.
+     * @return this pointer.
+     */
+    T channel(String channelId, boolean exclude);
+
+    /**
+     * Includes a channel to response receiver list by channel.
+     *
+     * @param channelId the channel id of the channel.
+     * @return this pointer.
+     */
+    default T channel(String channelId) {
+        return channel(channelId, false);
+    }
+
+    /**
+     * Includes/excludes an array of channels to/from response receiver list by channel.
+     *
+     * @param channelIds the collection of channelIds of the channels.
+     * @param exclude false is inclusive, true is exclusive.
+     * @return this pointer.
+     */
+    T channels(String[] channelIds, boolean exclude);
+
+    /**
+     * Includes/excludes an collection of channels to/from response receiver list by channel.
+     *
+     * @param channelIds the collection of channelIds of the channels.
+     * @param exclude false is inclusive, true is exclusive.
+     * @return this pointer.
+     */
+    T channels(Iterable<String> channelIds, boolean exclude);
+
+    /**
+     * Includes an array of channels to response receiver list by channel.
+     *
+     * @param channelIds the collection of channelIds of the channels.
+     * @return this pointer.
+     */
+    default T channels(String... channelIds) {
+        return channels(channelIds, false);
+    }
+
+    /**
+     * Includes an collection of channels to response receiver list by channel.
+     *
+     * @param channelIds the collection of channelIds of the channels.
+     * @return this pointer.
+     */
+    default T channels(Iterable<String> channelIds) {
+        return channels(channelIds, false);
+    }
 
     /**
      * Set transport type to response.

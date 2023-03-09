@@ -74,5 +74,23 @@ public interface EzyResponse extends EzyVoidCommand {
         return sessions(sessions, false);
     }
 
+    default EzyResponse room(String roomId) {
+        return room(roomId, false);
+    }
+
+    EzyResponse room(String roomId, boolean exclude);
+
+    EzyResponse rooms(String[] roomIds, boolean exclude);
+
+    EzyResponse rooms(Iterable<String> roomIds, boolean exclude);
+
+    default EzyResponse rooms(String... roomIds) {
+        return rooms(roomIds, false);
+    }
+
+    default EzyResponse rooms(Iterable<String> roomIds) {
+        return rooms(roomIds, false);
+    }
+
     EzyResponse transportType(EzyTransportType transportType);
 }

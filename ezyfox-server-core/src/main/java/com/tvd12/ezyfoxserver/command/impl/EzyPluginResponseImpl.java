@@ -6,6 +6,7 @@ import com.tvd12.ezyfoxserver.command.EzyPluginResponse;
 import com.tvd12.ezyfoxserver.constant.EzyTransportType;
 import com.tvd12.ezyfoxserver.context.EzyPluginContext;
 import com.tvd12.ezyfoxserver.context.EzyZoneContexts;
+import com.tvd12.ezyfoxserver.wrapper.EzyRoomManager;
 import com.tvd12.ezyfoxserver.wrapper.EzyUserManager;
 
 public class EzyPluginResponseImpl
@@ -19,6 +20,11 @@ public class EzyPluginResponseImpl
     @Override
     protected EzyUserManager getUserManager(EzyPluginContext context) {
         return EzyZoneContexts.getUserManager(context.getParent());
+    }
+
+    @Override
+    protected EzyRoomManager getRoomManager(EzyPluginContext context) {
+        return null;
     }
 
     @Override

@@ -11,9 +11,11 @@ import com.tvd12.ezyfoxserver.delegate.EzyUserDelegate;
 import com.tvd12.ezyfoxserver.setting.*;
 import com.tvd12.ezyfoxserver.socket.EzyBlockingSocketUserRemovalQueue;
 import com.tvd12.ezyfoxserver.socket.EzySocketUserRemovalQueue;
+import com.tvd12.ezyfoxserver.wrapper.EzyAppRoomManager;
 import com.tvd12.ezyfoxserver.wrapper.EzyAppUserManager;
 import com.tvd12.ezyfoxserver.wrapper.EzyEventControllers;
 import com.tvd12.ezyfoxserver.wrapper.EzyZoneUserManager;
+import com.tvd12.ezyfoxserver.wrapper.impl.EzyAppRoomManagerImpl;
 import com.tvd12.ezyfoxserver.wrapper.impl.EzyAppUserManagerImpl;
 import com.tvd12.ezyfoxserver.wrapper.impl.EzyEventControllersImpl;
 import com.tvd12.ezyfoxserver.wrapper.impl.EzyZoneUserManagerImpl;
@@ -131,10 +133,12 @@ public class EzySimpleServerContextBuilder<B extends EzySimpleServerContextBuild
     ) {
         EzySimpleAppUserDelegate userDelegate = new EzySimpleAppUserDelegate();
         EzyAppUserManager appUserManager = newAppUserManager(setting, userDelegate);
+        EzyAppRoomManager appChannelManager = newAppChannelManager();
         EzyEventControllers eventControllers = newEventControllers();
         EzySimpleApplication app = new EzySimpleApplication();
         app.setSetting(setting);
         app.setUserManager(appUserManager);
+        app.setRoomManager(appChannelManager);
         app.setEventControllers(eventControllers);
         ScheduledExecutorService appExecutorService = newAppExecutorService(setting);
         EzySimpleAppContext appContext = new EzySimpleAppContext();
@@ -155,6 +159,11 @@ public class EzySimpleServerContextBuilder<B extends EzySimpleServerContextBuild
             .maxUsers(setting.getMaxUsers())
             .userDelegate(userDelegate)
             .build();
+    }
+
+    protected EzyAppRoomManager newAppChannelManager() {
+        return EzyAppRoomManagerImpl.builder()
+                .build();
     }
 
     protected Collection<EzyPluginContext> newPluginContexts(

@@ -5,6 +5,7 @@ import com.tvd12.ezyfox.util.EzyEquals;
 import com.tvd12.ezyfox.util.EzyHashCodes;
 import com.tvd12.ezyfoxserver.app.EzyAppRequestController;
 import com.tvd12.ezyfoxserver.setting.EzyAppSetting;
+import com.tvd12.ezyfoxserver.wrapper.EzyAppRoomManager;
 import com.tvd12.ezyfoxserver.wrapper.EzyAppUserManager;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,6 +20,7 @@ public class EzySimpleApplication
 
     protected EzyAppSetting setting;
     protected EzyAppUserManager userManager;
+    protected EzyAppRoomManager roomManager;
     protected EzyAppRequestController requestController;
 
     public EzySimpleApplication() {

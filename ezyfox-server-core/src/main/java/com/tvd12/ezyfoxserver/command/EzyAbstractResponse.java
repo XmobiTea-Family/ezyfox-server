@@ -7,9 +7,11 @@ import com.tvd12.ezyfoxserver.context.EzyZoneChildContext;
 import com.tvd12.ezyfoxserver.controller.EzyMessageController;
 import com.tvd12.ezyfoxserver.entity.EzySession;
 import com.tvd12.ezyfoxserver.entity.EzyUser;
+import com.tvd12.ezyfoxserver.wrapper.EzyRoomManager;
 import com.tvd12.ezyfoxserver.wrapper.EzyUserManager;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public abstract class EzyAbstractResponse<C extends EzyZoneChildContext>
@@ -25,14 +27,18 @@ public abstract class EzyAbstractResponse<C extends EzyZoneChildContext>
 
     protected C context;
     protected EzyUserManager userManager;
+    protected EzyRoomManager roomManager;
 
     public EzyAbstractResponse(C context) {
         this.context = context;
         this.userManager = getUserManager(context);
+        this.roomManager = getRoomManager(context);
         this.transportType = EzyTransportType.TCP;
     }
 
     protected abstract EzyUserManager getUserManager(C context);
+
+    protected abstract EzyRoomManager getRoomManager(C context);
 
     @Override
     public EzyResponse encrypted() {
@@ -129,6 +135,28 @@ public abstract class EzyAbstractResponse<C extends EzyZoneChildContext>
     public EzyResponse sessions(Iterable<EzySession> sessions, boolean exclude) {
         for (EzySession s : sessions) {
             session(s, exclude);
+        }
+        return this;
+    }
+
+    @Override
+    public EzyResponse room(String roomId, boolean exclude) {
+        List<EzyUser> users = roomManager.getUsers(roomId);
+        return users(users, exclude);
+    }
+
+    @Override
+    public EzyResponse rooms(String[] roomIds, boolean exclude) {
+        for (String roomId : roomIds) {
+            room(roomId, exclude);
+        }
+        return this;
+    }
+
+    @Override
+    public EzyResponse rooms(Iterable<String> roomIds, boolean exclude) {
+        for (String roomId : roomIds) {
+            room(roomId, exclude);
         }
         return this;
     }
